@@ -25,7 +25,7 @@
 
         body {
             background-color: var(--azul-fondo-profundo);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 50%, var(--lila-neon), transparent 40%),
                 radial-gradient(circle at 85% 30%, var(--rosa-neon), transparent 40%),
                 radial-gradient(circle at 50% 80%, rgba(0, 229, 255, 0.2), transparent 50%);
@@ -162,16 +162,14 @@
 </head>
 <body>
 
-<!-- ⚠️ AQUÍ SE AGREGA EL ACTION Y TARGET AL FORMULARIO -->
 <form id="formSoporte" action="https://script.google.com/macros/s/AKfycbz-WfMvAuynSsu9cFDZPz4wIlK_Ps41jh9k33sLH9-H3Nbq40U3rpepR-2LFNiT8-2cNQ/exec" method="POST" target="oculto">
-    
+
     <div class="logo-container">
         <img src="impo.png" alt="Logo IMP">
     </div>
 
     <h1>Soporte Técnico</h1>
 
-    <!-- ⚠️ SE AGREGA EL ATRIBUTO NAME A TODOS LOS INPUTS -->
     <label for="tipoUsuario"><i class="fa-solid fa-user-tag"></i> Soy:</label>
     <select id="tipoUsuario" name="tipo" required>
         <option value="">-- Selecciona una opción --</option>
@@ -222,14 +220,16 @@
         <i class="fa-solid fa-paper-plane" id="btnIcono"></i>
         <div class="spinner" id="spinner"></div>
     </button>
-    
+
     <div id="estado"></div>
 </form>
 
-<!-- ⚠️ ESTE IFRAME OCULTO EVITA QUE LA PÁGINA SE RECARGUE -->
+<!-- Iframe oculto: evita que la página se recargue al enviar -->
 <iframe name="oculto" id="oculto" style="display:none;"></iframe>
 
 <script>
+    const formSoporte       = document.getElementById('formSoporte');
+    const iframeOculto      = document.getElementById('oculto');
     const tipoUsuario       = document.getElementById('tipoUsuario');
     const bloqueColaborador = document.getElementById('bloqueColaborador');
     const bloqueAlumno      = document.getElementById('bloqueAlumno');
@@ -243,7 +243,10 @@
     const spinner           = document.getElementById('spinner');
     const estadoDiv         = document.getElementById('estado');
 
-    tipoUsuario.addEventListener('change', function() {
+    let enviando = false;
+    let temporizador = null;
+
+    tipoUsuario.addEventListener('change', function () {
         const valor = tipoUsuario.value;
         bloqueColaborador.classList.add('oculto');
         bloqueAlumno.classList.add('oculto');
@@ -263,33 +266,49 @@
         }
     });
 
-    // ⚠️ NUEVA LÓGICA DE ENVÍO (Sin fetch, usando el formulario tradicional)
-    document.getElementById('formSoporte').addEventListener('submit', function(e) {
-        // Ya NO hacemos e.preventDefault() para que el formulario se envíe de verdad al iframe
+    function restaurarBoton() {
+        btnTexto.textContent = "Enviar solicitud";
+        btnIcono.style.display = "inline-block";
+        spinner.style.display = "none";
+        btnEnviar.disabled = false;
+    }
 
-        // Estado de carga
+    // Al enviar: solo mostramos el estado de carga (el formulario se envía al iframe)
+    formSoporte.addEventListener('submit', function () {
+        enviando = true;
         btnTexto.textContent = "Enviando...";
         btnIcono.style.display = "none";
         spinner.style.display = "block";
         btnEnviar.disabled = true;
         estadoDiv.style.display = "none";
 
-        // Simulamos un tiempo de espera para mostrar el mensaje de éxito
-        setTimeout(() => {
+        // Si en 20 s no hay respuesta, avisamos del problema
+        temporizador = setTimeout(() => {
+            if (!enviando) return;
+            enviando = false;
             estadoDiv.style.display = "block";
-            estadoDiv.style.color = '#0f5132';
-            estadoDiv.style.backgroundColor = '#d1e7dd';
-            estadoDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!';
-            
-            document.getElementById('formSoporte').reset();
-            bloqueColaborador.classList.add('oculto');
-            bloqueAlumno.classList.add('oculto');
-            
-            btnTexto.textContent = "Enviar solicitud";
-            btnIcono.style.display = "inline-block";
-            spinner.style.display = "none";
-            btnEnviar.disabled = false;
-        }, 1500); // 1.5 segundos de espera
+            estadoDiv.style.color = '#842029';
+            estadoDiv.style.backgroundColor = '#f8d7da';
+            estadoDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> No se pudo confirmar el envío. Intenta de nuevo.';
+            restaurarBoton();
+        }, 20000);
+    });
+
+    // Cuando el iframe termina de cargar, la petición ya se completó
+    iframeOculto.addEventListener('load', function () {
+        if (!enviando) return; // ignora la carga inicial del iframe
+        enviando = false;
+        clearTimeout(temporizador);
+
+        estadoDiv.style.display = "block";
+        estadoDiv.style.color = '#0f5132';
+        estadoDiv.style.backgroundColor = '#d1e7dd';
+        estadoDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!';
+
+        formSoporte.reset();
+        bloqueColaborador.classList.add('oculto');
+        bloqueAlumno.classList.add('oculto');
+        restaurarBoton();
     });
 </script>
 

@@ -162,7 +162,7 @@
 </head>
 <body>
 
-<form id="formSoporte" action="https://script.google.com/macros/s/AKfycbz-WfMvAuynSsu9cFDZPz4wIlK_Ps41jh9k33sLH9-H3Nbq40U3rpepR-2LFNiT8-2cNQ/exec" method="POST" target="oculto">
+<form id="formSoporte" action="https://script.google.com/macros/s/AKfycbz-WfMvAuynSsu9cFDZPz4wIlK_Ps41jh9k33sLH9-H3Nbq40U3rpepR-2LFNiT8-2cNQ/exec" method="POST">
 
     <div class="logo-container">
         <img src="impo.png" alt="Logo IMP">
@@ -224,12 +224,8 @@
     <div id="estado"></div>
 </form>
 
-<!-- Iframe oculto: evita que la página se recargue al enviar -->
-<iframe name="oculto" id="oculto" style="display:none;"></iframe>
-
 <script>
     const formSoporte       = document.getElementById('formSoporte');
-    const iframeOculto      = document.getElementById('oculto');
     const tipoUsuario       = document.getElementById('tipoUsuario');
     const bloqueColaborador = document.getElementById('bloqueColaborador');
     const bloqueAlumno      = document.getElementById('bloqueAlumno');
@@ -242,9 +238,6 @@
     const btnIcono          = document.getElementById('btnIcono');
     const spinner           = document.getElementById('spinner');
     const estadoDiv         = document.getElementById('estado');
-
-    let enviando = false;
-    let temporizador = null;
 
     tipoUsuario.addEventListener('change', function () {
         const valor = tipoUsuario.value;
@@ -273,42 +266,41 @@
         btnEnviar.disabled = false;
     }
 
-    // Al enviar: solo mostramos el estado de carga (el formulario se envía al iframe)
-    formSoporte.addEventListener('submit', function () {
-        enviando = true;
+    function mostrarEstado(ok, html) {
+        estadoDiv.style.display = "block";
+        estadoDiv.style.color = ok ? '#0f5132' : '#842029';
+        estadoDiv.style.backgroundColor = ok ? '#d1e7dd' : '#f8d7da';
+        estadoDiv.innerHTML = html;
+    }
+
+    formSoporte.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
         btnTexto.textContent = "Enviando...";
         btnIcono.style.display = "none";
         spinner.style.display = "block";
         btnEnviar.disabled = true;
         estadoDiv.style.display = "none";
 
-        // Si en 20 s no hay respuesta, avisamos del problema
-        temporizador = setTimeout(() => {
-            if (!enviando) return;
-            enviando = false;
-            estadoDiv.style.display = "block";
-            estadoDiv.style.color = '#842029';
-            estadoDiv.style.backgroundColor = '#f8d7da';
-            estadoDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> No se pudo confirmar el envío. Intenta de nuevo.';
+        try {
+            const datos = new URLSearchParams(new FormData(formSoporte));
+
+            await fetch(formSoporte.action, {
+                method: "POST",
+                mode: "no-cors",
+                body: datos
+            });
+
+            mostrarEstado(true, '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!');
+            formSoporte.reset();
+            bloqueColaborador.classList.add('oculto');
+            bloqueAlumno.classList.add('oculto');
+        } catch (err) {
+            console.error(err);
+            mostrarEstado(false, '<i class="fa-solid fa-circle-exclamation"></i> No se pudo enviar. Revisa tu conexión e intenta de nuevo.');
+        } finally {
             restaurarBoton();
-        }, 20000);
-    });
-
-    // Cuando el iframe termina de cargar, la petición ya se completó
-    iframeOculto.addEventListener('load', function () {
-        if (!enviando) return; // ignora la carga inicial del iframe
-        enviando = false;
-        clearTimeout(temporizador);
-
-        estadoDiv.style.display = "block";
-        estadoDiv.style.color = '#0f5132';
-        estadoDiv.style.backgroundColor = '#d1e7dd';
-        estadoDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!';
-
-        formSoporte.reset();
-        bloqueColaborador.classList.add('oculto');
-        bloqueAlumno.classList.add('oculto');
-        restaurarBoton();
+        }
     });
 </script>
 

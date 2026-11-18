@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitud de Soporte - IMP</title>
-    <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta basada en la nueva imagen */
             --azul-fondo-profundo: #062b7a;
             --cian-neon: #00e5ff;
             --rosa-neon: rgba(255, 105, 180, 0.4);
@@ -26,7 +24,6 @@
         }
 
         body {
-            /* Fondo con gradiente complejo imitando la imagen */
             background-color: var(--azul-fondo-profundo);
             background-image: 
                 radial-gradient(circle at 15% 50%, var(--lila-neon), transparent 40%),
@@ -41,29 +38,22 @@
         }
 
         form {
-            /* Efecto de cristal (Glassmorphism) */
             background: var(--blanco-cristal);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             padding: 35px;
             border-radius: 20px;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
             width: 100%;
             max-width: 480px;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        form:hover {
-            transform: translateY(-8px);
-        }
+        form:hover { transform: translateY(-8px); }
 
-        /* Contenedor del Logo */
         .logo-container {
             text-align: center;
             margin-bottom: 20px;
-            /* Fondo azul para que el logo blanco resalte */
             background: linear-gradient(135deg, #0d3c9e, #062168);
             padding: 20px;
             border-radius: 12px;
@@ -83,7 +73,6 @@
             color: var(--azul-fondo-profundo);
             margin-bottom: 20px;
             font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
         label {
@@ -96,13 +85,9 @@
             align-items: center;
             gap: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        label i {
-            color: #0077b6; /* Azul intermedio */
-            font-size: 15px;
-        }
+        label i { color: #0077b6; font-size: 15px; }
 
         input, select, textarea {
             width: 100%;
@@ -121,7 +106,6 @@
             border-color: var(--cian-neon);
             background-color: #ffffff;
             outline: none;
-            /* Brillo neón al enfocar */
             box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
         }
 
@@ -129,7 +113,6 @@
             margin-top: 25px;
             width: 100%;
             padding: 15px;
-            /* Botón con gradiente del logo */
             background: linear-gradient(90deg, #0044cc, #00b4d8);
             color: white;
             border: none;
@@ -142,22 +125,13 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
-            font-family: 'Outfit', sans-serif;
-            box-shadow: 0 5px 15px rgba(0, 68, 204, 0.3);
         }
 
         button:hover {
-            transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5);
-            background: linear-gradient(90deg, #003399, #0096c7);
         }
 
-        button:disabled {
-            background: #a0a0a0;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+        button:disabled { background: #a0a0a0; cursor: not-allowed; }
 
         #estado {
             text-align: center;
@@ -166,14 +140,11 @@
             font-size: 14px;
             padding: 12px;
             border-radius: 10px;
-            transition: all 0.3s ease;
+            display: none;
         }
 
         .oculto { display: none; }
-
-        .bloque-animado {
-            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        .bloque-animado { animation: slideDown 0.4s ease forwards; }
 
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-15px); }
@@ -189,19 +160,13 @@
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <form id="formSoporte">
-    
-    <!-- CONTENEDOR DEL LOGO -->
     <div class="logo-container">
-        <!-- Cambia "logo.png" por el nombre real de tu archivo -->
         <img src="impo.png" alt="Logo IMP">
     </div>
 
@@ -217,7 +182,6 @@
     <label for="nombre"><i class="fa-solid fa-user"></i> Nombre de quien solicita:</label>
     <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
 
-    <!-- ====== BLOQUE COLABORADOR ====== -->
     <div id="bloqueColaborador" class="oculto">
         <label for="area"><i class="fa-solid fa-building"></i> Área o Departamento:</label>
         <input type="text" id="area" placeholder="Ej. Recursos Humanos">
@@ -226,7 +190,6 @@
         <input type="text" id="ubicacion" placeholder="Ej. Piso 2, Oficina 204">
     </div>
 
-    <!-- ====== BLOQUE ALUMNO / DOCENTE ====== -->
     <div id="bloqueAlumno" class="oculto">
         <label for="salon"><i class="fa-solid fa-chalkboard"></i> Salón:</label>
         <input type="text" id="salon" placeholder="Ej. 3°B">
@@ -242,7 +205,6 @@
         </select>
     </div>
 
-    <!-- ====== CAMPOS COMUNES ====== -->
     <label for="equipo"><i class="fa-solid fa-laptop-medical"></i> Tipo de problema:</label>
     <select id="equipo" required>
         <option value="">-- Selecciona el problema --</option>
@@ -265,12 +227,9 @@
 </form>
 
 <script>
-    // ⚠️ Configuración de ntfy
-    const TEMA_NTFY = "alerta_sistemas"; 
-    const SERVIDOR_NTFY = "https://ntfy.sh/";
-    const TOKEN_NTFY = "Bearer tk_mexolvnbaj2r2u1h08ioo6tt1h540";
+    // ⚠️ AQUÍ DEBES PEGAR LA URL DE TU APLICACIÓN WEB DE GOOGLE APPS SCRIPT
+    const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbz-WfMvAuynSsu9cFDZPz4wIlK_Ps41jh9k33sLH9-H3Nbq40U3rpepR-2LFNiT8-2cNQ/exec";
 
-    // Referencias
     const tipoUsuario       = document.getElementById('tipoUsuario');
     const bloqueColaborador = document.getElementById('bloqueColaborador');
     const bloqueAlumno      = document.getElementById('bloqueAlumno');
@@ -278,94 +237,50 @@
     const campoUbicacion    = document.getElementById('ubicacion');
     const campoSalon        = document.getElementById('salon');
     const campoPlantel      = document.getElementById('plantel');
-    
-    // Ref. Botón
-    const btnEnviar = document.getElementById('btnEnviar');
-    const btnTexto  = document.getElementById('btnTexto');
-    const btnIcono  = document.getElementById('btnIcono');
-    const spinner   = document.getElementById('spinner');
-    const estadoDiv = document.getElementById('estado');
+    const btnEnviar         = document.getElementById('btnEnviar');
+    const btnTexto          = document.getElementById('btnTexto');
+    const btnIcono          = document.getElementById('btnIcono');
+    const spinner           = document.getElementById('spinner');
+    const estadoDiv         = document.getElementById('estado');
 
-    // Mostrar el bloque según la selección
     tipoUsuario.addEventListener('change', function() {
         const valor = tipoUsuario.value;
-
         bloqueColaborador.classList.add('oculto');
         bloqueAlumno.classList.add('oculto');
         bloqueColaborador.classList.remove('bloque-animado');
         bloqueAlumno.classList.remove('bloque-animado');
-
-        campoArea.required = false;
-        campoUbicacion.required = false;
-        campoSalon.required = false;
-        campoPlantel.required = false;
+        campoArea.required = false; campoUbicacion.required = false;
+        campoSalon.required = false; campoPlantel.required = false;
 
         if (valor === 'colaborador') {
             bloqueColaborador.classList.remove('oculto');
             bloqueColaborador.classList.add('bloque-animado');
-            campoArea.required = true;
-            campoUbicacion.required = true;
+            campoArea.required = true; campoUbicacion.required = true;
         } else if (valor === 'alumno') {
             bloqueAlumno.classList.remove('oculto');
             bloqueAlumno.classList.add('bloque-animado');
-            campoSalon.required = true;
-            campoPlantel.required = true;
+            campoSalon.required = true; campoPlantel.required = true;
         }
     });
 
     document.getElementById('formSoporte').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Efecto de carga
+        // Estado de carga
         btnTexto.textContent = "Enviando...";
         btnIcono.style.display = "none";
         spinner.style.display = "block";
         btnEnviar.disabled = true;
-        estadoDiv.textContent = "";
-        estadoDiv.style.backgroundColor = "transparent";
-        estadoDiv.style.border = "none";
+        estadoDiv.style.display = "none";
 
-        // 1. Recoger datos comunes
+        // Recoger datos
         const tipo     = tipoUsuario.value;
         const nombre   = document.getElementById('nombre').value.trim();
         const equipo   = document.getElementById('equipo').value;
         const problema = document.getElementById('problema').value.trim();
+        const ahora    = new Date().toLocaleString('es-MX');
 
-        // 2. Recoger datos según el tipo
-        let ubicacionTexto = '';
-        if (tipo === 'colaborador') {
-            const area      = campoArea.value.trim();
-            const ubicacion = campoUbicacion.value.trim();
-            ubicacionTexto  = `🏢 Área: ${area}\n📍 Ubicación: ${ubicacion}`;
-        } else {
-            const salon   = campoSalon.value.trim();
-            const plantel = campoPlantel.value;
-            ubicacionTexto = `🏫 Salón: ${salon}\n📍 Plantel: ${plantel}`;
-        }
-
-        // 3. Fecha y hora
-        const ahora = new Date().toLocaleString('es-MX', {
-            dateStyle: 'short',
-            timeStyle: 'short'
-        });
-
-        // 4. Construir el mensaje
-        const cuerpoMensaje =
-`🆘 NUEVA SOLICITUD DE SOPORTE
-
-👤 Tipo: ${tipo === 'colaborador' ? 'Colaborador' : 'Alumno / Docente'}
-🙋 Solicitante: ${nombre}
-${ubicacionTexto}
-💻 Tipo de problema: ${equipo}
-📝 Descripción: ${problema}
-🕒 Hora: ${ahora}`;
-
-        // 5. Título dinámico
-        const tituloNotif = tipo === 'colaborador'
-            ? `Soporte: ${campoArea.value} - ${equipo}`
-            : `Soporte: ${campoPlantel.value} - Salón ${campoSalon.value}`;
-
-        // 6. Enviar a Google Sheets y ntfy a través de Apps Script
+        // Preparar el JSON para Google
         const datosParaEnviar = {
             fecha: ahora,
             tipo: tipo === 'colaborador' ? 'Colaborador' : 'Alumno / Docente',
@@ -378,37 +293,31 @@ ${ubicacionTexto}
             problema: problema
         };
 
-        // ⚠️ AQUÍ PEGA TU URL DE GOOGLE APPS SCRIPT
-        const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbz6Hhu1l79YdDAJObqo52BXKRjfm7WWWCEjt4MwGtFCgvnF-l50OBqBPni54zNj6SLouw/exec";
-
+        // Enviar a Google
         fetch(URL_GOOGLE_SCRIPT, {
             method: 'POST',
+            mode: 'no-cors', // ⚠️ ESTO ES CLAVE PARA QUE NO SE QUEDE CARGANDO
             body: JSON.stringify(datosParaEnviar),
             headers: {
                 'Content-Type': 'text/plain;charset=utf-8' 
             }
         })
-        .then(response => {
-            if (response.ok) {
-                // Éxito
-                estadoDiv.style.color = '#0f5132';
-                estadoDiv.style.backgroundColor = '#d1e7dd';
-                estadoDiv.style.border = '1px solid #badbcc';
-                estadoDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!';
-                
-                document.getElementById('formSoporte').reset();
-                bloqueColaborador.classList.add('oculto');
-                bloqueAlumno.classList.add('oculto');
-            } else {
-                throw new Error('Error en el envío');
-            }
+        .then(() => {
+            // Con 'no-cors' no podemos leer la respuesta, pero si llegamos aquí, se envió
+            estadoDiv.style.display = "block";
+            estadoDiv.style.color = '#0f5132';
+            estadoDiv.style.backgroundColor = '#d1e7dd';
+            estadoDiv.innerHTML = '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!';
+            
+            document.getElementById('formSoporte').reset();
+            bloqueColaborador.classList.add('oculto');
+            bloqueAlumno.classList.add('oculto');
         })
         .catch(error => {
+            estadoDiv.style.display = "block";
             estadoDiv.style.color = '#842029';
             estadoDiv.style.backgroundColor = '#f8d7da';
-            estadoDiv.style.border = '1px solid #f5c2c7';
-            estadoDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> No se pudo enviar. Intenta de nuevo.';
-            console.error(error);
+            estadoDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> No se pudo enviar. Revisa tu conexión.';
         })
         .finally(() => {
             btnTexto.textContent = "Enviar solicitud";

@@ -365,20 +365,32 @@ ${ubicacionTexto}
             ? `Soporte: ${campoArea.value} - ${equipo}`
             : `Soporte: ${campoPlantel.value} - Salón ${campoSalon.value}`;
 
-        // 6. Enviar a ntfy
-        fetch(SERVIDOR_NTFY + TEMA_NTFY, {
+        // 6. Enviar a Google Sheets y ntfy a través de Apps Script
+        const datosParaEnviar = {
+            fecha: ahora,
+            tipo: tipo === 'colaborador' ? 'Colaborador' : 'Alumno / Docente',
+            nombre: nombre,
+            area: tipo === 'colaborador' ? campoArea.value : "",
+            salon: tipo === 'alumno' ? campoSalon.value : "",
+            plantel: tipo === 'alumno' ? campoPlantel.value : "",
+            ubicacion: tipo === 'colaborador' ? campoUbicacion.value : "",
+            equipo: equipo,
+            problema: problema
+        };
+
+        // ⚠️ AQUÍ PEGA TU URL DE GOOGLE APPS SCRIPT
+        const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwZdMam8LyZYmDT6KrMjPyX3kLfXkwRkdECPkFAHq98_ZpBGaNyT87RB2inidKJ0uN1xQ/exec";
+
+        fetch(URL_GOOGLE_SCRIPT, {
             method: 'POST',
-            body: cuerpoMensaje,
+            body: JSON.stringify(datosParaEnviar),
             headers: {
-                'Title': tituloNotif,
-                'Priority': 'high',
-                'Tags': 'rotating_light,computer',
-                'Click': SERVIDOR_NTFY + TEMA_NTFY,
-                'Authorization': TOKEN_NTFY
+                'Content-Type': 'text/plain;charset=utf-8' 
             }
         })
         .then(response => {
             if (response.ok) {
+                // Éxito
                 estadoDiv.style.color = '#0f5132';
                 estadoDiv.style.backgroundColor = '#d1e7dd';
                 estadoDiv.style.border = '1px solid #badbcc';

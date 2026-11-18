@@ -127,10 +127,7 @@
             gap: 10px;
         }
 
-        button:hover {
-            box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5);
-        }
-
+        button:hover { box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5); }
         button:disabled { background: #a0a0a0; cursor: not-allowed; }
 
         #estado {
@@ -165,37 +162,40 @@
 </head>
 <body>
 
-<form id="formSoporte">
+<!-- ⚠️ AQUÍ SE AGREGA EL ACTION Y TARGET AL FORMULARIO -->
+<form id="formSoporte" action="https://script.google.com/macros/s/AKfycbz-WfMvAuynSsu9cFDZPz4wIlK_Ps41jh9k33sLH9-H3Nbq40U3rpepR-2LFNiT8-2cNQ/exec" method="POST" target="oculto">
+    
     <div class="logo-container">
         <img src="impo.png" alt="Logo IMP">
     </div>
 
     <h1>Soporte Técnico</h1>
 
+    <!-- ⚠️ SE AGREGA EL ATRIBUTO NAME A TODOS LOS INPUTS -->
     <label for="tipoUsuario"><i class="fa-solid fa-user-tag"></i> Soy:</label>
-    <select id="tipoUsuario" required>
+    <select id="tipoUsuario" name="tipo" required>
         <option value="">-- Selecciona una opción --</option>
         <option value="colaborador">Colaborador</option>
         <option value="alumno">Alumno / Docente</option>
     </select>
 
     <label for="nombre"><i class="fa-solid fa-user"></i> Nombre de quien solicita:</label>
-    <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
+    <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
 
     <div id="bloqueColaborador" class="oculto">
         <label for="area"><i class="fa-solid fa-building"></i> Área o Departamento:</label>
-        <input type="text" id="area" placeholder="Ej. Recursos Humanos">
+        <input type="text" id="area" name="area" placeholder="Ej. Recursos Humanos">
 
         <label for="ubicacion"><i class="fa-solid fa-location-dot"></i> Ubicación exacta:</label>
-        <input type="text" id="ubicacion" placeholder="Ej. Piso 2, Oficina 204">
+        <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej. Piso 2, Oficina 204">
     </div>
 
     <div id="bloqueAlumno" class="oculto">
         <label for="salon"><i class="fa-solid fa-chalkboard"></i> Salón:</label>
-        <input type="text" id="salon" placeholder="Ej. 3°B">
+        <input type="text" id="salon" name="salon" placeholder="Ej. 3°B">
 
         <label for="plantel"><i class="fa-solid fa-school"></i> Plantel:</label>
-        <select id="plantel">
+        <select id="plantel" name="plantel">
             <option value="">-- Selecciona el Plantel --</option>
             <option>Montevideo 517</option>
             <option>Montevideo 613</option>
@@ -206,7 +206,7 @@
     </div>
 
     <label for="equipo"><i class="fa-solid fa-laptop-medical"></i> Tipo de problema:</label>
-    <select id="equipo" required>
+    <select id="equipo" name="equipo" required>
         <option value="">-- Selecciona el problema --</option>
         <option>Computadora</option>
         <option>Monitor / Pantalla</option>
@@ -215,7 +215,7 @@
     </select>
 
     <label for="problema"><i class="fa-solid fa-comment-dots"></i> Descripción del problema:</label>
-    <textarea id="problema" rows="3" placeholder="Describe brevemente qué está fallando..." required></textarea>
+    <textarea id="problema" name="problema" rows="3" placeholder="Describe brevemente qué está fallando..." required></textarea>
 
     <button type="submit" id="btnEnviar">
         <span id="btnTexto">Enviar solicitud</span>
@@ -226,10 +226,10 @@
     <div id="estado"></div>
 </form>
 
-<script>
-    // ⚠️ AQUÍ DEBES PEGAR LA URL DE TU APLICACIÓN WEB DE GOOGLE APPS SCRIPT
-    const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbz-WfMvAuynSsu9cFDZPz4wIlK_Ps41jh9k33sLH9-H3Nbq40U3rpepR-2LFNiT8-2cNQ/exec";
+<!-- ⚠️ ESTE IFRAME OCULTO EVITA QUE LA PÁGINA SE RECARGUE -->
+<iframe name="oculto" id="oculto" style="display:none;"></iframe>
 
+<script>
     const tipoUsuario       = document.getElementById('tipoUsuario');
     const bloqueColaborador = document.getElementById('bloqueColaborador');
     const bloqueAlumno      = document.getElementById('bloqueAlumno');
@@ -263,8 +263,9 @@
         }
     });
 
+    // ⚠️ NUEVA LÓGICA DE ENVÍO (Sin fetch, usando el formulario tradicional)
     document.getElementById('formSoporte').addEventListener('submit', function(e) {
-        e.preventDefault();
+        // Ya NO hacemos e.preventDefault() para que el formulario se envíe de verdad al iframe
 
         // Estado de carga
         btnTexto.textContent = "Enviando...";
@@ -273,37 +274,8 @@
         btnEnviar.disabled = true;
         estadoDiv.style.display = "none";
 
-        // Recoger datos
-        const tipo     = tipoUsuario.value;
-        const nombre   = document.getElementById('nombre').value.trim();
-        const equipo   = document.getElementById('equipo').value;
-        const problema = document.getElementById('problema').value.trim();
-        const ahora    = new Date().toLocaleString('es-MX');
-
-        // Preparar el JSON para Google
-        const datosParaEnviar = {
-            fecha: ahora,
-            tipo: tipo === 'colaborador' ? 'Colaborador' : 'Alumno / Docente',
-            nombre: nombre,
-            area: tipo === 'colaborador' ? campoArea.value : "",
-            salon: tipo === 'alumno' ? campoSalon.value : "",
-            plantel: tipo === 'alumno' ? campoPlantel.value : "",
-            ubicacion: tipo === 'colaborador' ? campoUbicacion.value : "",
-            equipo: equipo,
-            problema: problema
-        };
-
-        // Enviar a Google
-        fetch(URL_GOOGLE_SCRIPT, {
-            method: 'POST',
-            mode: 'no-cors', // ⚠️ ESTO ES CLAVE PARA QUE NO SE QUEDE CARGANDO
-            body: JSON.stringify(datosParaEnviar),
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8' 
-            }
-        })
-        .then(() => {
-            // Con 'no-cors' no podemos leer la respuesta, pero si llegamos aquí, se envió
+        // Simulamos un tiempo de espera para mostrar el mensaje de éxito
+        setTimeout(() => {
             estadoDiv.style.display = "block";
             estadoDiv.style.color = '#0f5132';
             estadoDiv.style.backgroundColor = '#d1e7dd';
@@ -312,19 +284,12 @@
             document.getElementById('formSoporte').reset();
             bloqueColaborador.classList.add('oculto');
             bloqueAlumno.classList.add('oculto');
-        })
-        .catch(error => {
-            estadoDiv.style.display = "block";
-            estadoDiv.style.color = '#842029';
-            estadoDiv.style.backgroundColor = '#f8d7da';
-            estadoDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> No se pudo enviar. Revisa tu conexión.';
-        })
-        .finally(() => {
+            
             btnTexto.textContent = "Enviar solicitud";
             btnIcono.style.display = "inline-block";
             spinner.style.display = "none";
             btnEnviar.disabled = false;
-        });
+        }, 1500); // 1.5 segundos de espera
     });
 </script>
 

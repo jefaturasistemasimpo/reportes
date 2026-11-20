@@ -76,7 +76,6 @@
         }
 
         label {
-            display: block;
             margin-top: 15px;
             font-size: 13px;
             font-weight: 600;
@@ -239,6 +238,7 @@
     const spinner           = document.getElementById('spinner');
     const estadoDiv         = document.getElementById('estado');
 
+    // Mostrar los campos según el tipo de usuario
     tipoUsuario.addEventListener('change', function () {
         const valor = tipoUsuario.value;
         bloqueColaborador.classList.add('oculto');
@@ -273,6 +273,7 @@
         estadoDiv.innerHTML = html;
     }
 
+    // Envío al Apps Script (que guarda en la hoja y avisa por Telegram)
     formSoporte.addEventListener('submit', async function (e) {
         e.preventDefault();
 

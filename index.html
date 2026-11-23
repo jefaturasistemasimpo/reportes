@@ -275,34 +275,42 @@
 
     // Envío al Apps Script (que guarda en la hoja y avisa por Telegram)
     formSoporte.addEventListener('submit', async function (e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        btnTexto.textContent = "Enviando...";
-        btnIcono.style.display = "none";
-        spinner.style.display = "block";
-        btnEnviar.disabled = true;
-        estadoDiv.style.display = "none";
+    btnTexto.textContent = "Enviando...";
+    btnIcono.style.display = "none";
+    spinner.style.display = "block";
+    btnEnviar.disabled = true;
+    estadoDiv.style.display = "none";
 
-        try {
-            const datos = new URLSearchParams(new FormData(formSoporte));
+    try {
+        const datos = new URLSearchParams(new FormData(formSoporte));
 
-            await fetch(formSoporte.action, {
-                method: "POST",
-                mode: "no-cors",
-                body: datos
-            });
+        const respuesta = await fetch(formSoporte.action, {
+            method: "POST",
+            body: datos
+        });
+        const resultado = await respuesta.json();
 
-            mostrarEstado(true, '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!');
+        if (resultado.status === "success") {
+            mostrarEstado(true,
+                '<i class="fa-solid fa-circle-check"></i> ¡Solicitud enviada con éxito!' +
+                '<br>Tu número de reporte es <strong>#' + resultado.id + '</strong>'
+            );
             formSoporte.reset();
             bloqueColaborador.classList.add('oculto');
             bloqueAlumno.classList.add('oculto');
-        } catch (err) {
-            console.error(err);
-            mostrarEstado(false, '<i class="fa-solid fa-circle-exclamation"></i> No se pudo enviar. Revisa tu conexión e intenta de nuevo.');
-        } finally {
-            restaurarBoton();
+        } else {
+            console.error(resultado);
+            mostrarEstado(false, '<i class="fa-solid fa-circle-exclamation"></i> No se pudo registrar la solicitud. Intenta de nuevo.');
         }
-    });
+    } catch (err) {
+        console.error(err);
+        mostrarEstado(false, '<i class="fa-solid fa-circle-exclamation"></i> No se pudo confirmar el envío. Revisa tu conexión e intenta de nuevo.');
+    } finally {
+        restaurarBoton();
+    }
+});
 </script>
 
 </body>
